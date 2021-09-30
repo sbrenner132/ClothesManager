@@ -10,8 +10,9 @@ const AboutScreen = () => {
       <View style={styles.header}>
         <Text style={styles.text}>
           This application allows you to manage your clothes and, in later
-          updates, will allows you to pick a random outfit and save it as a
-          profile.
+          updates, will allow you to pick a random outfit and save it as a
+          profile. Then, you will later be able to choose an outfit at random to
+          wear for the day.
         </Text>
       </View>
       <View style={styles.body}>
@@ -28,13 +29,13 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     backgroundColor: "#C6E5CC",
-    paddingBottom: 20
+    paddingBottom: 20,
   },
   header: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingLeft: 10
+    paddingLeft: 10,
   },
   body: {
     flex: 1,
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
-    fontFamily: "sans-serif-thin"
+    fontFamily: "sans-serif-thin",
   },
   image: {
     width: "50%",
