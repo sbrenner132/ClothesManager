@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import { StyleSheet, View, Button, Text, Image } from "react-native";
 
@@ -7,16 +8,6 @@ const IMG_URI =
 const HomeScreen = ({ route, navigation }) => {
   return (
     <View style={styles.homepage}>
-      <View style={styles.homepage_header}>
-        <Button
-          title="About Page"
-          onPress={() => navigation.navigate("About")}
-        />
-        <Button
-          title="Manage Clothes"
-          onPress={() => navigation.navigate("Manage")}
-        />
-      </View>
       <View style={styles.homepage_body}>
         <Text style={styles.text}>
           Welcome to the Clothes Management App! Visit the About Page to see
@@ -39,6 +30,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     height: "100%",
+    backgroundColor: "#C6E5CC"
   },
   homepage_header: {
     flex: 2,

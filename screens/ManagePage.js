@@ -1,17 +1,22 @@
-import React from "react";
-import { StyleSheet, View, Button, TextInput, Text } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useState } from "react";
+import { StyleSheet, View, Button, TextInput, Text, Image } from "react-native";
 
-const ManageScreen = ({ navigation }) => {
-  const DEFAULT = "Enter something...";
+const ManageScreen = ({ navigation, route }) => {
+  const DEFAULT = "Clothing Item Name";
 
-  const [item, setItem] = React.useState("");
+  const [item, setItem] = useState("");
+
+  const reset = () => {
+    setItem("");
+  };
 
   return (
     <View style={styles.container}>
-      <View style={styles.label}>
+      <View style={{ flex: 1 }}>
         <Text style={styles.text}>Add a clothing item:</Text>
       </View>
-      <View style={styles.preferences}>
+      <View style={{ flex: 9, justifyContent: "space-evenly", alignItems: "center" }}>
         <TextInput
           value={item}
           placeholder={DEFAULT}
@@ -20,10 +25,41 @@ const ManageScreen = ({ navigation }) => {
           onBlur={() => setItem(item || DEFAULT)}
           onChangeText={(text) => setItem(text)}
         />
+        {route.params && route.params.image ? (
+          <View style={{flex: 1, justifyContent: "space-evenly", alignItems: "center"}}>
+            <Image
+              style={{
+                width: 200,
+                height: 300,
+              }}
+              source={{ uri: route.params.image.uri }}
+            />
+            <Button
+              title="retake"
+              onPress={() => navigation.navigate("Images")}
+            />
+          </View>
+        ) : (
+          <Button
+            title={"Choose Image"}
+            onPress={() => {
+              navigation.navigate("Images");
+            }}
+          />
+        )}
         <Button
           title="Add"
           style={styles.submit_button}
-          onPress={() => navigation.navigate("Home", { item_name: item })}
+          onPress={async () => {
+            const items = JSON.parse(
+              (await AsyncStorage.getItem("@items")) || "[]"
+            );
+            const new_item = { img: route.params.image, name: item };
+            items.push(new_item);
+            await AsyncStorage.setItem("@items", JSON.stringify(items));
+            reset();
+            navigation.navigate("Home", { item_name: item });
+          }}
         />
       </View>
     </View>
@@ -37,7 +73,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "column",
     backgroundColor: "#C6E5CC",
-    height: "100%",
+    flex: 1,
+    paddingBottom: 30
   },
   label: {
     justifyContent: "center",
@@ -48,11 +85,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
-    width: "100%"
+    width: "100%",
   },
   text_input: {
     height: 50,
-    width: "40%",
+    width: "50%",
     backgroundColor: "#ffffff",
     paddingLeft: 15,
     paddingRight: 15,
@@ -63,7 +100,12 @@ const styles = StyleSheet.create({
   },
   text: {
     fontWeight: "bold",
-    fontFamily: "sans-serif-thin"
+    fontFamily: "sans-serif-thin",
+    fontSize: 25,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
   },
 });
 
