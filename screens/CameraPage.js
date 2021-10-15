@@ -63,6 +63,7 @@ export default ({ navigation }) => {
   } else if (!isFocused) {
     return <View />;
   } else if (!photo) {
+    console.log('here!!')
     return (
       <View style={styles.container}>
         <Camera style={styles.camera} type={type} ref={cameraRef}>

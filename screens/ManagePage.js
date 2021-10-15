@@ -29,8 +29,8 @@ const ManageScreen = ({ navigation, route }) => {
           <View style={{flex: 1, justifyContent: "space-evenly", alignItems: "center"}}>
             <Image
               style={{
-                width: 200,
-                height: 300,
+                width: 100,
+                height: 150,
               }}
               source={{ uri: route.params.image.uri }}
             />
