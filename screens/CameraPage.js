@@ -6,9 +6,10 @@ import {
   StyleSheet,
   Text,
   ImageBackground,
+  Platform,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import * as ImaagePicker from "expo-image-picker";
+import * as ImagePicker from "expo-image-picker";
 import { useIsFocused } from "@react-navigation/native";
 
 export default ({ navigation }) => {
@@ -22,15 +23,24 @@ export default ({ navigation }) => {
 
   const requestPermission = async () => {
     // camera permissions
-    const { status } = await Camera.requestCameraPermissionsAsync();
-    setHasPermission(status === "granted");
-    if (cameraRef && cameraRef.current) {
-      cameraRef.current.resumePreview();
+    const types = await Camera.getAvailableCameraTypesAsync();
+    console.log(types);
+    if (await Camera.isAvailableAsync()) {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      console.log("here");
+      setHasPermission(status === "granted");
+      if (cameraRef && cameraRef.current) {
+        cameraRef.current.resumePreview();
+      }
     }
 
     // file access permissions
     if (Platform.OS !== "web") {
-      const { status } = await ImaagePicker.requestCameraPermissionsAsync();
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      setPermission(status === "granted");
+    } else {
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
       setPermission(status === "granted");
     }
   };
@@ -44,8 +54,8 @@ export default ({ navigation }) => {
   });
 
   const pickImage = async () => {
-    const result = await ImaagePicker.launchImageLibraryAsync({
-      mediaTypes: ImaagePicker.MediaTypeOptions.All,
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
@@ -63,7 +73,7 @@ export default ({ navigation }) => {
   } else if (!isFocused) {
     return <View />;
   } else if (!photo) {
-    console.log('here!!')
+    console.log("here!!");
     return (
       <View style={styles.container}>
         <Camera style={styles.camera} type={type} ref={cameraRef}>
@@ -108,7 +118,7 @@ export default ({ navigation }) => {
     );
   } else {
     return (
-      <View>
+      <View style={styles.container}>
         <ImageBackground style={styles.image} source={{ uri: photo.uri }}>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
