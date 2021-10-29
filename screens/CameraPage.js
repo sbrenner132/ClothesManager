@@ -23,15 +23,10 @@ export default ({ navigation }) => {
 
   const requestPermission = async () => {
     // camera permissions
-    const types = await Camera.getAvailableCameraTypesAsync();
-    console.log(types);
-    if (await Camera.isAvailableAsync()) {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      console.log("here");
-      setHasPermission(status === "granted");
-      if (cameraRef && cameraRef.current) {
-        cameraRef.current.resumePreview();
-      }
+    const { status } = await Camera.requestCameraPermissionsAsync();
+    setHasPermission(status === "granted");
+    if (cameraRef && cameraRef.current) {
+      cameraRef.current.resumePreview();
     }
 
     // file access permissions
@@ -73,7 +68,6 @@ export default ({ navigation }) => {
   } else if (!isFocused) {
     return <View />;
   } else if (!photo) {
-    console.log("here!!");
     return (
       <View style={styles.container}>
         <Camera style={styles.camera} type={type} ref={cameraRef}>

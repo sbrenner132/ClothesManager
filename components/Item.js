@@ -1,17 +1,18 @@
 import React from "react";
 import { StyleSheet, View, Image, Text } from "react-native";
 
-export default function ({ img, name }) {
+export default function ({ item }) {
   return (
     <View style={styles.item}>
       <View style={{paddingLeft: 20}}>
       <Image
-        source={{ uri: img.uri }}
+        source={{ uri: item.img.uri }}
         style={{ width: 50, height: 100 }}
       />
       </View>
       <View style={styles.name}>
-        <Text style={{fontSize: 20}}>{name}</Text>
+        <Text style={{fontSize: 20}}>{item.name}</Text>
+        <Text style={{fontSize: 10}}>{item.type}</Text>
       </View>
     </View>
   );

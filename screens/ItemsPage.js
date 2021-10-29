@@ -1,75 +1,37 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet, FlatList, Text, Button } from "react-native";
-import Item from "../components/Item";
+import * as React from 'react';
+import { View, useWindowDimensions } from 'react-native';
+import { TabView, SceneMap } from 'react-native-tab-view';
+import Items from '../components/Items';
+import Outfits from '../components/Outfits';
 
-export default function () {
-  const [items, setItems] = useState([]);
+const FirstRoute = () => (
+  <Items />
+);
 
-  const loadData = async () => {
-    const items = JSON.parse((await AsyncStorage.getItem("@items")) || "[]");
-    const refactored = items.map((item) => {
-      return {
-        id: item.name,
-        ...item,
-      };
-    });
-    setItems(refactored);
-  };
+const SecondRoute = () => (
+  <Outfits />
+);
 
-  useEffect(() => {
-    loadData();
-  });
+const renderScene = SceneMap({
+  first: FirstRoute,
+  second: SecondRoute,
+});
+
+export default function TabViewExample() {
+  const layout = useWindowDimensions();
+
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: 'first', title: 'Items' },
+    { key: 'second', title: 'Outfits' },
+  ]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Clothes Items Added</Text>
-      </View>
-      <View style={styles.button}>
-        <Button title="Clear all" onPress={async () => {
-          await AsyncStorage.clear()
-        }}/>
-      </View>
-      <View style={styles.body}>
-        <FlatList
-          contentContainerStyle={styles.list}
-          data={items}
-          renderItem={({ item }) => (
-            <View style={{ paddingBottom: 10 }}>
-              <Item name={item.name} img={item.img} />
-            </View>
-          )}
-          keyExtractor={(item) => item.id}
-        />
-      </View>
-    </View>
+    <TabView
+      navigationState={{ index, routes }}
+      renderScene={renderScene}
+      onIndexChange={setIndex}
+      initialLayout={{ width: layout.width }}
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  container: {
-    flex: 1,
-    flexDirection: "column",
-  },
-  header: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  headerText: {
-    fontSize: 20,
-  },
-  body: {
-    flex: 9,
-  },
-  list: {
-    justifyContent: "space-between",
-  },
-});
