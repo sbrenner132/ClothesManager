@@ -42,7 +42,7 @@ To run this app locally, once cloned and redirected into the appropriate folder,
 
 2. To run in a web browser
 
-    ```terminal
+    ```console
     npm install
     yarn web
     ```
